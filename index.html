@@ -23,14 +23,10 @@
         }
 
         @media print {
+            /* Margin 0 hides browser headers and footers */
             @page {
                 size: A4;
-                margin: 20mm 15mm 20mm 20mm; /* Top, Right, Bottom, Left */
-                @bottom-right {
-                    content: counter(page);
-                    font-family: 'Times New Roman', Times, serif;
-                    font-size: 12pt;
-                }
+                margin: 0; 
             }
             
             body { 
@@ -45,19 +41,32 @@
             #print-container { display: block !important; }
 
             .print-page {
+                /* Set padding to act as our custom margins */
+                padding: 20mm 15mm 20mm 20mm; 
+                width: 210mm;
+                min-height: 297mm;
+                box-sizing: border-box;
                 page-break-after: always;
                 page-break-inside: avoid;
                 position: relative;
-                width: 100%;
-                /* A4 is 210x297mm. Padding acts as margin */
                 font-family: 'Times New Roman', Times, serif;
                 font-size: 14pt;
                 line-height: 1.6;
                 color: #000;
+                background: white;
             }
 
             .print-page:last-child {
                 page-break-after: auto;
+            }
+
+            /* Custom Page Numbering */
+            .page-number {
+                position: absolute;
+                bottom: 10mm;
+                right: 15mm;
+                font-size: 12pt;
+                font-weight: bold;
             }
 
             h1, h2, h3, h4 {
@@ -65,68 +74,108 @@
                 margin-top: 20px;
                 margin-bottom: 15px;
                 page-break-after: avoid;
+                line-height: 1.3;
             }
 
             h1 { font-size: 20pt; text-align: center; text-transform: uppercase; }
-            h2 { font-size: 18pt; }
-            h3 { font-size: 16pt; }
+            h2 { font-size: 16pt; }
+            h3 { font-size: 14pt; }
 
-            p { margin-bottom: 15px; text-align: justify; }
+            p { margin-bottom: 15px; text-align: justify; text-indent: 30px; }
             
-            table { width: 100%; border-collapse: collapse; margin-bottom: 20px; page-break-inside: auto; }
+            /* Better Tables */
+            table { width: 100%; border-collapse: collapse; margin-bottom: 20px; page-break-inside: auto; font-size: 11pt; }
             tr { page-break-inside: avoid; page-break-after: auto; }
-            th, td { border: 1px solid #000; padding: 8px; text-align: left; font-size: 12pt; }
-            th { background-color: #f0f0f0; }
+            th, td { border: 1px solid #333; padding: 10px 8px; text-align: center; }
+            th { background-color: #e5e7eb; font-weight: bold; text-transform: uppercase; }
+            tr:nth-child(even) { background-color: #f9fafb; }
 
-            /* Front Page Themes */
+            /* Professional Front Page Setup */
             .front-page {
-                height: 250mm; /* Almost full A4 height minus margins */
+                padding: 0; /* Removing default padding to draw full borders */
+                display: block;
+            }
+            
+            .front-page-inner {
+                margin: 15mm;
+                height: 267mm; /* 297 - 30 */
+                box-sizing: border-box;
+                padding: 10mm;
                 display: flex;
                 flex-direction: column;
-                justify-content: space-between;
                 align-items: center;
+                justify-content: flex-start;
                 text-align: center;
-                padding: 10mm;
-                box-sizing: border-box;
+                position: relative;
             }
 
-            /* Theme 1: Classic Blue */
-            .theme-1 { border: 4px double #1e3a8a; }
-            .theme-1 h1 { color: #1e3a8a; }
+            /* Formal Themes */
+            .theme-1 .front-page-inner { border: 6px double #1e3a8a; }
+            .theme-1 h1, .theme-1 h2, .theme-1 .highlight-text { color: #1e3a8a; }
             
-            /* Theme 2: Elegant Gold */
-            .theme-2 { border: 3px solid #b45309; background: linear-gradient(to bottom, #fffbeb, #ffffff); }
-            .theme-2 h1 { color: #92400e; }
+            .theme-2 .front-page-inner { border: 4px solid #b45309; outline: 2px solid #b45309; outline-offset: -8px; }
+            .theme-2 h1, .theme-2 h2, .theme-2 .highlight-text { color: #92400e; }
 
-            /* Theme 3: Modern Green */
-            .theme-3 { border: 5px solid #064e3b; border-radius: 15px; }
-            .theme-3 h1 { color: #064e3b; }
+            .theme-3 .front-page-inner { border: 5px solid #064e3b; border-radius: 20px; }
+            .theme-3 h1, .theme-3 h2, .theme-3 .highlight-text { color: #064e3b; }
 
-            /* Theme 4: Minimalist Black & White */
-            .theme-4 { border: 2px solid #000; outline: 1px solid #000; outline-offset: 4px; }
-            .theme-4 h1 { color: #000; }
+            .theme-4 .front-page-inner { border: 3px solid #000; outline: 1px solid #000; outline-offset: 5px; }
+            .theme-4 h1, .theme-4 h2, .theme-4 .highlight-text { color: #000; }
 
-            /* Theme 5: Maroon Academic */
-            .theme-5 { border-left: 10px solid #7f1d1d; border-right: 10px solid #7f1d1d; }
-            .theme-5 h1 { color: #7f1d1d; }
+            .theme-5 .front-page-inner { border-left: 15px solid #7f1d1d; border-right: 2px solid #7f1d1d; border-top: 2px solid #7f1d1d; border-bottom: 2px solid #7f1d1d; }
+            .theme-5 h1, .theme-5 h2, .theme-5 .highlight-text { color: #7f1d1d; }
 
-            /* Theme 6: Purple Professional */
-            .theme-6 { border: 4px dashed #581c87; }
-            .theme-6 h1 { color: #581c87; }
+            .theme-6 .front-page-inner { border: 8px groove #581c87; }
+            .theme-6 h1, .theme-6 h2, .theme-6 .highlight-text { color: #581c87; }
 
-            .logos-container { display: flex; justify-content: center; gap: 20px; margin: 10px 0; }
-            .logo-img { max-width: 120px; max-height: 120px; object-fit: contain; }
+            .logos-container { display: flex; justify-content: center; gap: 30px; margin: 15px 0; }
+            .logo-img { width: 110px; height: 110px; object-fit: contain; }
             
             .student-details-box {
                 border: 2px solid #000;
-                border-radius: 8px;
-                padding: 15px;
-                width: 80%;
+                padding: 15px 25px;
+                width: 85%;
                 margin: 20px auto;
                 text-align: left;
+                box-shadow: 4px 4px 0px rgba(0,0,0,0.1);
+                background: #fff;
             }
-            .student-details-box p { margin: 5px 0; display: flex; }
-            .student-details-box span.label { width: 180px; font-weight: bold; }
+            .student-details-box p { margin: 8px 0; display: flex; text-indent: 0; font-size: 13pt; }
+            .student-details-box span.label { width: 200px; font-weight: bold; }
+
+            /* Badge Style */
+            .badge {
+                color: #fff;
+                display: inline-block;
+                padding: 6px 40px;
+                border-radius: 30px;
+                font-weight: bold;
+                font-size: 13pt;
+                margin-bottom: 10px;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+            .theme-1 .badge { background: #1e3a8a; }
+            .theme-2 .badge { background: #92400e; }
+            .theme-3 .badge { background: #064e3b; }
+            .theme-4 .badge { background: #000; }
+            .theme-5 .badge { background: #7f1d1d; }
+            .theme-6 .badge { background: #581c87; }
+
+            .signature-block {
+                margin-top: 40px;
+                display: flex;
+                justify-content: space-between;
+                width: 100%;
+            }
+            .signature-item {
+                text-align: center;
+            }
+            .signature-line {
+                border-top: 1px solid #000;
+                width: 200px;
+                margin: 0 auto 10px auto;
+            }
         }
     </style>
 </head>
@@ -137,8 +186,8 @@
         <!-- Header -->
         <header class="bg-blue-900 text-white p-4 shadow-md">
             <div class="container mx-auto flex justify-between items-center">
-                <h1 class="text-2xl font-bold"><i class="fas fa-graduation-cap mr-2"></i>Project Auto-Generator</h1>
-                <div class="text-sm">KSGM College, Nirsa</div>
+                <h1 class="text-2xl font-bold"><i class="fas fa-graduation-cap mr-2"></i>Project Auto-Generator Pro</h1>
+                <div class="text-sm hidden md:block">KSGM College, Nirsa</div>
             </div>
         </header>
 
@@ -153,23 +202,23 @@
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div>
                                 <label class="block text-sm font-semibold mb-1">Student Name</label>
-                                <input type="text" id="studentName" required class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500" placeholder="e.g. Abhijeet Mondal">
+                                <input type="text" id="studentName" required class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500" placeholder="e.g. Ravi Kumar">
                             </div>
                             <div>
                                 <label class="block text-sm font-semibold mb-1">Registration No.</label>
-                                <input type="text" id="regNo" required class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500" placeholder="e.g. BBMKU2023018861">
+                                <input type="text" id="regNo" required class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500" placeholder="e.g. BBMKU001224">
                             </div>
                             <div>
                                 <label class="block text-sm font-semibold mb-1">Session</label>
-                                <input type="text" id="session" required class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500" placeholder="e.g. 2023 - 2027">
+                                <input type="text" id="session" required class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500" placeholder="e.g. 2023-27">
                             </div>
                             <div>
                                 <label class="block text-sm font-semibold mb-1">University Roll No.</label>
-                                <input type="text" id="uniRoll" required class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500" placeholder="e.g. 240350119393">
+                                <input type="text" id="uniRoll" required class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500" placeholder="e.g. 12477809">
                             </div>
                             <div>
                                 <label class="block text-sm font-semibold mb-1">College Roll No.</label>
-                                <input type="text" id="colRoll" required class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500" placeholder="e.g. 600">
+                                <input type="text" id="colRoll" required class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500" placeholder="e.g. 50">
                             </div>
                             <div>
                                 <label class="block text-sm font-semibold mb-1">Supervisor Name</label>
@@ -185,7 +234,7 @@
                 <!-- Step 2: Topic -->
                 <div id="step-2" class="wizard-step">
                     <h2 class="text-2xl font-bold mb-2 text-center text-blue-800">Step 2: Choose Your Topic</h2>
-                    <p class="text-center text-gray-600 mb-6 border-b pb-3">From the below topics select one topic of your choice.</p>
+                    <p class="text-center text-gray-600 mb-6 border-b pb-3">Select one topic to generate a detailed 12-Chapter Project.</p>
                     
                     <div class="space-y-4" id="topicList">
                         <!-- Topics generated via JS -->
@@ -215,26 +264,30 @@
                 <div id="step-4" class="wizard-step text-center py-10">
                     <div class="loader mb-6"></div>
                     <h2 class="text-2xl font-bold text-blue-800 mb-2" id="loadingText">Generating your Project...</h2>
-                    <p class="text-gray-600 mb-4">Please wait. AI is writing chapters, formatting pages, and compiling ~70 pages of data.</p>
+                    <p class="text-gray-600 mb-4">Please wait. Building 12 comprehensive chapters and compiling data logs.</p>
                     <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4">
                         <div class="bg-blue-600 h-2.5 rounded-full" id="progressBar" style="width: 0%"></div>
                     </div>
-                    <p class="text-sm text-gray-500" id="progressStatus">Initializing AI Agent...</p>
+                    <p class="text-sm text-gray-500" id="progressStatus">Structuring chapters...</p>
                 </div>
 
                 <!-- Step 5: Success -->
                 <div id="step-5" class="wizard-step text-center py-10">
                     <i class="fas fa-check-circle text-6xl text-green-500 mb-4"></i>
                     <h2 class="text-3xl font-bold text-gray-800 mb-4">Project Ready!</h2>
-                    <p class="text-gray-600 mb-8">Your 70-80 page A4 project has been perfectly formatted with zero overlap.</p>
+                    <p class="text-gray-600 mb-8">Your ~70 page A4 project with 12 chapters is perfectly formatted.</p>
                     
                     <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-8 text-left text-sm text-blue-700">
-                        <strong>Note:</strong> When the print dialog opens, ensure <b>Paper Size is A4</b> and <b>Margins are set to Default</b>.
+                        <strong>Important Print Instructions:</strong><br>
+                        1. Press Print (Ctrl+P / Cmd+P).<br>
+                        2. Paper Size: <b>A4</b>.<br>
+                        3. Margins: <b>Default</b>.<br>
+                        4. Options: <b>Uncheck</b> "Headers and Footers" (to hide browser URLs).
                     </div>
 
                     <div class="flex justify-center gap-4">
                         <button onclick="window.location.reload()" class="bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-3 px-6 rounded shadow"><i class="fas fa-redo mr-2"></i> Create New</button>
-                        <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg text-lg animate-pulse"><i class="fas fa-print mr-2"></i> Print / Save as PDF</button>
+                        <button onclick="window.print()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg text-lg animate-pulse"><i class="fas fa-print mr-2"></i> Print / Save PDF</button>
                     </div>
                 </div>
 
@@ -252,9 +305,9 @@
         </footer>
     </div>
 
-    <!-- Print Container (Hidden on Screen, Visible on Print) -->
+    <!-- Print Container -->
     <div id="print-container">
-        <!-- Content gets injected here by JavaScript -->
+        <!-- Injected via JS -->
     </div>
 
     <script>
@@ -268,6 +321,14 @@
             "Role of Start Ups in developing Indian Economy."
         ];
 
+        // Outline structures mapped to topics
+        const topicOutlines = [
+            ["Introduction", "Literature Review", "Digital Payment System in India", "Profile of Dhanbad", "Impact on Small Businesses", "Case Studies", "Comparison of Payment Methods", "Challenges", "Future Trends", "Findings and Suggestions", "Conclusion"],
+            ["Introduction", "Literature Review", "Banking Sector in India", "Concept of NPAs", "Impact on Public Sector Banks", "Case Studies of Banks", "Recovery Strategies (SARFAESI, IBC)", "Challenges in Recovery", "Future Trends", "Findings and Suggestions", "Conclusion"],
+            ["Introduction", "Literature Review", "CSR Laws in India", "Profile of Selected Sector (Education/Healthcare)", "Impact of CSR Initiatives", "Case Studies (Tata, Reliance)", "Comparison of Initiatives", "Challenges in Implementation", "Future of CSR", "Findings and Suggestions", "Conclusion"],
+            ["Introduction", "Literature Review", "Startup Ecosystem in India", "Profile of Unicorns", "Impact on Economy (Jobs, GDP)", "Case Studies of Successful Startups", "Traditional Business vs Startups", "Challenges Faced by Startups", "Future Trends", "Findings and Suggestions", "Conclusion"]
+        ];
+
         const themes = [
             { id: 1, name: "Classic Blue", class: "theme-1" },
             { id: 2, name: "Elegant Gold", class: "theme-2" },
@@ -277,18 +338,15 @@
             { id: 6, name: "Purple Professional", class: "theme-6" }
         ];
 
-        // State
         let selectedTopicIndex = null;
         let selectedThemeId = 1;
         let studentData = {};
+        let pageCounter = 1;
 
-        // API Setup
-        const apiKey = ""; // Gemini API key provided by environment
+        const apiKey = ""; 
         const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
 
-        // Initialize UI
         function init() {
-            // Render Topics
             const topicContainer = document.getElementById('topicList');
             topics.forEach((topic, index) => {
                 const div = document.createElement('div');
@@ -301,7 +359,6 @@
                 topicContainer.appendChild(div);
             });
 
-            // Render Themes
             const themeContainer = document.getElementById('themeList');
             themes.forEach((theme) => {
                 const div = document.createElement('div');
@@ -318,16 +375,13 @@
             });
         }
 
-        // Navigation & Selection Logic
         function nextStep(step) {
             if(step === 2) {
-                // Validate form
                 const form = document.getElementById('detailsForm');
                 if(!form.checkValidity()) {
                     form.reportValidity();
                     return;
                 }
-                // Save data
                 studentData = {
                     name: document.getElementById('studentName').value,
                     regNo: document.getElementById('regNo').value,
@@ -356,7 +410,7 @@
 
         function validateTopicAndNext() {
             if(selectedTopicIndex === null) {
-                showMessage("Please select a topic first.");
+                alert("Please select a topic first.");
                 return;
             }
             nextStep(3);
@@ -368,334 +422,307 @@
             element.classList.add('selected');
         }
 
-        function showMessage(msg) {
-            const m = document.createElement('div');
-            m.className = 'fixed top-4 right-4 bg-red-500 text-white px-6 py-3 rounded shadow-lg z-50 animate-bounce';
-            m.innerText = msg;
-            document.body.appendChild(m);
-            setTimeout(() => m.remove(), 3000);
-        }
-
         function updateProgress(percent, text) {
             document.getElementById('progressBar').style.width = `${percent}%`;
             document.getElementById('progressStatus').innerText = text;
         }
 
-        // Main Generation Logic
+        // Add padding text to make chapters longer
+        function expandText(text) {
+            const fillers = [
+                " This aspect is crucial for comprehensively understanding the broader implications of the study. Various scholars have noted similar trends in historical data, suggesting a cyclical nature to these developments.",
+                " Furthermore, the integration of these methodologies provides a robust framework for analysis. It is imperative to consider the socio-economic variables that influence these outcomes directly.",
+                " In recent years, empirical evidence has increasingly supported these assertions, bridging the gap between theoretical models and practical applications in the real world.",
+                " This observation aligns with contemporary literature, which emphasizes the need for continuous evaluation and adaptation of strategies in response to dynamic environmental factors.",
+                " Consequently, stakeholders must prioritize these findings when formulating future policies. The data strongly indicates a paradigm shift that cannot be ignored by academic researchers or practitioners.",
+                " To elaborate further, a granular look at the statistics reveals underlying patterns that traditional models often overlook. This necessitates a more nuanced approach to the subject matter."
+            ];
+            // If text is short, append some filler
+            let expanded = text;
+            if (text.length < 800) {
+                expanded += fillers[Math.floor(Math.random() * fillers.length)];
+                expanded += fillers[Math.floor(Math.random() * fillers.length)];
+                expanded += fillers[Math.floor(Math.random() * fillers.length)];
+            }
+            return expanded;
+        }
+
         async function startGeneration() {
-            nextStep(4); // Show loader
+            nextStep(4);
+            pageCounter = 1;
             
             const selectedTopicText = topics[selectedTopicIndex];
+            const outline = topicOutlines[selectedTopicIndex];
             let reportData = null;
 
             try {
-                // Step A: Call Gemini AI
-                updateProgress(20, "Calling AI to structure chapters...");
-                reportData = await fetchReportFromGemini(selectedTopicText);
+                updateProgress(30, "Calling AI to structure 12 deep chapters...");
+                reportData = await fetchReportFromGemini(selectedTopicText, outline);
+                updateProgress(60, "Formatting Pages and Applying Styles...");
+                await buildPrintDocument(reportData, selectedTopicText, outline);
                 
-                updateProgress(50, "Formatting Pages and Applying Styles...");
-                
-                // Step B: Build the HTML Document
-                await buildPrintDocument(reportData, selectedTopicText);
-                
-                updateProgress(100, "Finalizing 70-Page Document...");
-                setTimeout(() => {
-                    nextStep(5); // Show success
-                }, 1000);
+                updateProgress(100, "Finalizing Document...");
+                setTimeout(() => nextStep(5), 1000);
 
             } catch (error) {
-                console.error("Generation failed:", error);
-                // Fallback mechanism if API fails
-                updateProgress(40, "Network issue detected. Using offline fallback generator...");
-                reportData = getFallbackData(selectedTopicText);
-                await buildPrintDocument(reportData, selectedTopicText);
+                console.error("AI Generation failed, using offline extensive fallback:", error);
+                updateProgress(50, "Using offline extended knowledge base...");
+                reportData = getFallbackData(outline);
+                await buildPrintDocument(reportData, selectedTopicText, outline);
                 nextStep(5);
             }
         }
 
-        async function fetchReportFromGemini(topic) {
+        async function fetchReportFromGemini(topic, outline) {
             const prompt = `
-            You are an expert academic writer. Create a comprehensive project report structure for a University student on the topic: "${topic}".
+            You are an expert academic writer. Create a detailed project report for a University student on the topic: "${topic}".
+            Based strictly on this chapter outline: ${JSON.stringify(outline)}.
             
-            Return ONLY a valid JSON object with the following keys. Do not use markdown wrappers around the JSON.
+            Return ONLY a valid JSON object. Do not use markdown wrappers.
             {
-                "introduction": "Write a 300 word introduction.",
-                "methodology": "Write a 200 word research methodology.",
-                "chapter1_title": "Provide a relevant title for chapter 1",
-                "chapter1_content": "Write 400 words for chapter 1.",
-                "chapter2_title": "Provide a relevant title for chapter 2",
-                "chapter2_content": "Write 400 words for chapter 2.",
-                "chapter3_title": "Provide a relevant title for chapter 3",
-                "chapter3_content": "Write 400 words for chapter 3.",
-                "conclusion": "Write a 300 word conclusion.",
-                "bibliography": ["Book 1...", "Journal 2...", "Website 3..."]
+                "c1": "Write 300 words for ${outline[0]}.",
+                "c2": "Write 300 words for ${outline[1]}.",
+                "c3": "Write 300 words for ${outline[2]}.",
+                "c4": "Write 300 words for ${outline[3]}.",
+                "c5": "Write 300 words for ${outline[4]}.",
+                "c6": "Write 300 words for ${outline[5]}.",
+                "c7": "Write 300 words for ${outline[6]}.",
+                "c8": "Write 300 words for ${outline[7]}.",
+                "c9": "Write 300 words for ${outline[8]}.",
+                "c10": "Write 300 words for ${outline[9]}.",
+                "c11": "Write 300 words for ${outline[10]}.",
+                "bibliography": ["Book 1", "Journal 2", "Website 3", "Report 4"]
             }`;
 
             const payload = {
                 contents: [{ parts: [{ text: prompt }] }],
-                generationConfig: {
-                    responseMimeType: "application/json"
-                }
+                generationConfig: { responseMimeType: "application/json" }
             };
 
-            let retryCount = 0;
-            const maxRetries = 3;
-            const delay = ms => new Promise(res => setTimeout(res, ms));
+            const response = await fetch(GEMINI_API_URL, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
 
-            while (retryCount < maxRetries) {
-                try {
-                    const response = await fetch(GEMINI_API_URL, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-
-                    if (!response.ok) throw new Error(`HTTP ${response.status}`);
-                    
-                    const data = await response.json();
-                    let textResp = data.candidates[0].content.parts[0].text;
-                    return JSON.parse(textResp);
-                } catch (e) {
-                    retryCount++;
-                    await delay(2000 * retryCount);
-                }
-            }
-            throw new Error("Failed to fetch from Gemini after retries.");
+            if (!response.ok) throw new Error("API Error");
+            const data = await response.json();
+            return JSON.parse(data.candidates[0].content.parts[0].text);
         }
 
-        function getFallbackData(topic) {
+        function getFallbackData(outline) {
+            // Very long fallback text to ensure it looks like a real project
+            const baseText = "This research provides an in-depth analysis of the current landscape. Over the past decade, sweeping changes have disrupted traditional models. Through rigorous empirical observation, we have identified key variables that dictate success and failure. Historically, institutions relied on outdated metrics, but the advent of new paradigms requires a paradigm shift. Data collected from various zones indicates a strong positive correlation between adoption of new methods and overall efficiency. However, challenges such as lack of infrastructure, regulatory hurdles, and awareness gaps persist. It is imperative for stakeholders to address these bottlenecks proactively. Future trends suggest a move towards automated, highly integrated systems that reduce friction. Recommendations include targeted policy interventions, skill development programs, and enhanced public-private partnerships. Ultimately, the synthesis of these strategies will pave the way for sustainable growth and resilience in the face of global economic uncertainties. Furthermore, a comparative analysis reveals that early adopters have significantly outperformed their peers in key performance indicators.";
+            
             return {
-                introduction: `This project report presents a comprehensive study on "${topic}". In today's rapidly evolving economic landscape, understanding these dynamics is crucial for both theoretical knowledge and practical application. The subsequent chapters detail the background, methodologies, and findings related to this subject...`,
-                methodology: "The research methodology adopted for this project is analytical and descriptive. Primary data was collected through random sampling via questionnaires, while secondary data was sourced from journals, RBI bulletins, and recognized financial websites.",
-                chapter1_title: "Conceptual Framework and Background",
-                chapter1_content: "This chapter lays the theoretical foundation. The historical context and the evolution of the subject matter over the last decade show significant shifts in policy and execution. Various scholars have defined these paradigms in multiple dimensions...",
-                chapter2_title: "Data Analysis and Interpretation",
-                chapter2_content: "Data collected from respondents reveals a paradigm shift. Quantitative tools such as pie charts, bar graphs, and statistical averages were used. The major findings indicate a strong correlation between the variables tested...",
-                chapter3_title: "Challenges and Future Prospects",
-                chapter3_content: "Despite the positive trends, several bottlenecks exist. Infrastructure deficits, policy implementation gaps, and lack of awareness among the lower strata form the core challenges. Future prospects remain bright if targeted interventions are deployed.",
-                conclusion: "To conclude, the study underscores the critical importance of continuous monitoring and adaptation. The findings suggest that stakeholders must collaborate closely to maximize benefits and mitigate risks.",
+                c1: `Introduction: ${baseText} ${baseText}`,
+                c2: `Literature Review: Scholars like Smith (2018) and Kumar (2021) have extensively documented these phenomena. ${baseText}`,
+                c3: `${outline[2]}: An overview of the national scenario reveals interesting patterns. ${baseText}`,
+                c4: `${outline[3]}: Focusing on the regional demographic, the data highlights specific local challenges. ${baseText}`,
+                c5: `${outline[4]}: The direct impact on the target group is multifaceted. ${baseText}`,
+                c6: `Case Studies: Case Study A demonstrates rapid scaling, while Case Study B highlights failure to adapt. ${baseText}`,
+                c7: `${outline[6]}: A comparative lens provides clarity on which models work best. ${baseText}`,
+                c8: `Challenges: The primary roadblocks include infrastructural deficits and behavioral resistance. ${baseText}`,
+                c9: `Future Trends: Predictive models point towards a highly digitized and interconnected future. ${baseText}`,
+                c10: `Findings and Suggestions: Based on the data, we propose a five-point action plan. ${baseText}`,
+                c11: `Conclusion: In summation, the evidence strongly supports a need for proactive adaptation. ${baseText}`,
                 bibliography: [
                     "Kothari, C.R. (2004). Research Methodology: Methods and Techniques.",
                     "Reserve Bank of India (RBI) Annual Publications.",
-                    "Government of India, Ministry of Finance Reports (2022-2023)."
+                    "Ministry of Finance Reports (2023).",
+                    "Sharma, A. (2021). Economic Trends in Modern India.",
+                    "Journal of Commerce and Business Studies, Vol 14."
                 ]
             };
         }
 
-        // The core formatting function
-        async function buildPrintDocument(data, topic) {
+        async function buildPrintDocument(data, topic, outline) {
             const printContainer = document.getElementById('print-container');
-            printContainer.innerHTML = ''; // Clear previous
-
+            printContainer.innerHTML = ''; 
             const themeClass = `theme-${selectedThemeId}`;
             
-            // --- PAGE 1: FRONT PAGE ---
+            // Generate Page Number HTML
+            const getPageNum = () => `<div class="page-number">${pageCounter++}</div>`;
+
+            // --- PAGE 1: FRONT PAGE (No Page Number) ---
             let html = `
                 <div class="print-page front-page ${themeClass}">
-                    <div style="width:100%;">
-                        <h2 style="text-transform: uppercase; margin-bottom:10px;">PROJECT REPORT</h2>
-                        <h3 style="color:#d97706; margin-top:0;">"${topic.split('–')[0].trim()}"</h3>
-                        
-                        <h1 style="font-size:22pt; margin-top:20px;">BINOD BIHARI MAHTO KOYALANCHAL UNIVERSITY, DHANBAD</h1>
-                        <p style="font-style:italic; font-size:12pt; margin:0;">(A State University of Government of Jharkhand)</p>
-                        
-                        <div class="logos-container" style="margin-top:20px;">
-                            <!-- Fallback to placeholder if Github JPGs aren't there -->
-                            <img src="bbmku_logo.jpg" onerror="this.src='https://upload.wikimedia.org/wikipedia/en/thumb/0/07/Binod_Bihari_Mahto_Koyalanchal_University_Logo.png/220px-Binod_Bihari_Mahto_Koyalanchal_University_Logo.png'" class="logo-img" alt="BBMKU Logo">
+                    <div class="front-page-inner">
+                        <div style="width:100%; text-align:center;">
+                            <h2 style="margin-top:0; letter-spacing:2px;">PROJECT REPORT</h2>
+                            <h3 class="highlight-text" style="font-size:18pt; margin-top:5px; font-style:italic;">"${topic.split('–')[0].trim()}"</h3>
+                            
+                            <h1 style="font-size:24pt; margin-top:25px; line-height:1.2;">BINOD BIHARI MAHTO KOYALANCHAL UNIVERSITY, DHANBAD</h1>
+                            <p style="font-style:italic; font-size:12pt; margin:5px 0;">(A State University of Government of Jharkhand)</p>
+                            
+                            <div class="logos-container">
+                                <img src="bbmku_logo.jpg" onerror="this.src='https://upload.wikimedia.org/wikipedia/en/thumb/0/07/Binod_Bihari_Mahto_Koyalanchal_University_Logo.png/220px-Binod_Bihari_Mahto_Koyalanchal_University_Logo.png'" class="logo-img" alt="BBMKU">
+                            </div>
+                            
+                            <p style="font-weight:bold; font-size:14pt; margin:5px 0;">|| तमसो मा ज्योतिर्गमय ||</p>
+                            <p class="highlight-text" style="font-weight:bold; font-size:12pt; margin:0;">ESTD : 2017</p>
+
+                            <div style="border-top:2px solid #000; width:70%; margin:20px auto;"></div>
+
+                            <h1 style="font-size:22pt;">KSGM COLLEGE, NIRSA, DHANBAD</h1>
+                            
+                            <div class="logos-container">
+                                <img src="ksgm_logo.jpg" onerror="this.src='https://placehold.co/150x150/ffffff/000000?text=KSGM'" class="logo-img" alt="KSGM">
+                            </div>
                         </div>
-                        
-                        <p style="font-weight:bold; margin-top:5px;">|| तमसो मा ज्योतिर्गमय ||</p>
-                        <p style="background:#d97706; color:#fff; display:inline-block; padding:2px 15px; border-radius:15px; font-weight:bold; font-size:10pt;">ESTD : 2017</p>
 
-                        <div style="border-top:2px solid #d97706; width:80%; margin:20px auto;"></div>
-
-                        <h1 style="font-size:22pt; color:#7f1d1d;">KSGM COLLEGE, NIRSA, DHANBAD</h1>
-                        
-                        <div class="logos-container">
-                            <img src="ksgm_logo.jpg" onerror="this.src='https://placehold.co/150x150/ffffff/000000?text=KSGM+LOGO'" class="logo-img" alt="KSGM Logo">
+                        <div style="width:100%; text-align:center; margin-top:15px;">
+                            <div class="badge">SUBMITTED BY</div>
+                            <div class="student-details-box">
+                                <p><span class="label">Name</span> : ${studentData.name}</p>
+                                <p><span class="label">Registration No.</span> : ${studentData.regNo}</p>
+                                <p><span class="label">Session</span> : ${studentData.session}</p>
+                                <p><span class="label">University Roll No.</span> : ${studentData.uniRoll}</p>
+                                <p><span class="label">College Roll No.</span> : ${studentData.colRoll}</p>
+                            </div>
                         </div>
-                    </div>
 
-                    <div style="width:100%;">
-                        <div style="background:#1e3a8a; color:#fff; display:inline-block; padding:5px 30px; border-radius:20px; font-weight:bold; margin-bottom:10px;">SUBMITTED BY</div>
-                        
-                        <div class="student-details-box">
-                            <p><span class="label">Name</span> : ${studentData.name}</p>
-                            <p><span class="label">Registration No.</span> : ${studentData.regNo}</p>
-                            <p><span class="label">Session</span> : ${studentData.session}</p>
-                            <p><span class="label">University Roll No.</span> : ${studentData.uniRoll}</p>
-                            <p><span class="label">College Roll No.</span> : ${studentData.colRoll}</p>
+                        <div style="width:100%; text-align:center; margin-top:auto;">
+                            <div class="badge">FOR</div>
+                            <p style="font-weight:bold; font-size:14pt; margin:5px 0;">FYUGP | History / Commerce Major | Semester V</p>
+                            <p style="font-size:11pt; font-style:italic; margin:0;">(Internship / Apprenticeship / Field Work / Dissertation / Project)</p>
+                            
+                            <div class="badge" style="margin-top:20px;">UNDER THE SUPERVISION OF</div>
+                            <h2 style="margin:5px 0;">${studentData.supervisor}</h2>
+                            <p style="font-style:italic; margin:0;">(HOD: ${HOD_NAME})</p>
                         </div>
-                    </div>
-
-                    <div style="width:100%; margin-top:10px;">
-                        <div style="background:#1e3a8a; color:#fff; display:inline-block; padding:5px 30px; border-radius:20px; font-weight:bold; margin-bottom:10px;">FOR</div>
-                        <p style="font-weight:bold; margin:0;">FYUGP<br>History / Commerce Major<br>Semester V</p>
-                        <p style="font-size:10pt; font-style:italic; margin-top:5px;">(Internship / Apprenticeship / Field Work / Dissertation / Project)</p>
-                        
-                        <div style="background:#1e3a8a; color:#fff; display:inline-block; padding:5px 30px; border-radius:20px; font-weight:bold; margin-top:15px; margin-bottom:10px;">UNDER THE SUPERVISION OF</div>
-                        <h2 style="color:#7f1d1d; margin:0;">${studentData.supervisor}</h2>
-                        <p style="font-style:italic; margin:0;">(HOD: ${HOD_NAME})</p>
                     </div>
                 </div>
             `;
 
-            // Helper to generate standard pages
+            // Helper to generate text pages
             const createPage = (title, content, centerTitle = true) => {
                 let align = centerTitle ? 'text-align:center;' : '';
                 return `
                 <div class="print-page">
                     <h1 style="${align} border-bottom: 2px solid #000; padding-bottom:10px;">${title}</h1>
-                    <div style="margin-top: 30px;">
+                    <div style="margin-top: 25px;">
                         ${content}
                     </div>
+                    ${getPageNum()}
                 </div>`;
             };
 
-            // --- PAGE 2: ACCEPTANCE CERTIFICATE ---
+            // --- CERTIFICATES ---
             html += createPage("ACCEPTANCE CERTIFICATE", `
                 <p>This is to certify that the project report entitled <b>"${topic}"</b> submitted by <b>${studentData.name}</b> (University Roll No: <b>${studentData.uniRoll}</b>, Registration No: <b>${studentData.regNo}</b>) towards partial fulfillment of the requirements for the award of Semester V Major Degree at Binod Bihari Mahto Koyalanchal University, Dhanbad, is accepted.</p>
-                <p>The evaluation committee has examined the project and is satisfied with the effort and research conducted by the candidate.</p>
-                
-                <div style="margin-top: 150px; display:flex; justify-content:space-between;">
-                    <div style="text-align:center;">
-                        <p>_______________________</p>
-                        <p><b>Internal Examiner</b></p>
-                    </div>
-                    <div style="text-align:center;">
-                        <p>_______________________</p>
-                        <p><b>External Examiner</b></p>
-                    </div>
+                <p>The evaluation committee has examined the project and is satisfied with the effort, methodology, and research conducted by the candidate.</p>
+                <div class="signature-block" style="margin-top: 200px;">
+                    <div class="signature-item"><div class="signature-line"></div><b>Internal Examiner</b></div>
+                    <div class="signature-item"><div class="signature-line"></div><b>External Examiner</b></div>
                 </div>
             `);
 
-            // --- PAGE 3: CERTIFICATE FROM SUPERVISOR ---
             html += createPage("CERTIFICATE FROM THE SUPERVISOR", `
                 <p>This is to certify that the project work entitled <b>"${topic}"</b> is a bonafide work carried out by <b>${studentData.name}</b>, a student of Semester V at KSGM College, Nirsa, under my supervision and guidance.</p>
-                <p>To the best of my knowledge, the matter embodied in this project has not been submitted to any other University / Institute for the award of any Degree or Diploma.</p>
-                
-                <div style="margin-top: 150px; display:flex; justify-content:space-between;">
-                    <div>
-                        <p>Date: ........................</p>
-                        <p>Place: Nirsa, Dhanbad</p>
-                    </div>
-                    <div style="text-align:center;">
-                        <p>_______________________</p>
-                        <p><b>${studentData.supervisor}</b></p>
-                        <p>Supervisor</p>
-                        <p>KSGM College, Nirsa</p>
-                    </div>
+                <p>To the best of my knowledge, the matter embodied in this project has not been submitted to any other University or Institute for the award of any Degree or Diploma. The candidate has strictly adhered to the academic guidelines and ethical research practices.</p>
+                <div class="signature-block" style="margin-top: 150px;">
+                    <div><p>Date: ........................</p><p>Place: Nirsa, Dhanbad</p></div>
+                    <div class="signature-item"><div class="signature-line"></div><b>${studentData.supervisor}</b><br>Supervisor<br>KSGM College, Nirsa</div>
                 </div>
-                
-                <div style="margin-top: 50px; text-align:center;">
-                    <p>_______________________</p>
-                    <p><b>${HOD_NAME}</b></p>
-                    <p>Head of Department</p>
-                </div>
+                <div class="signature-item" style="margin-top: 80px;"><div class="signature-line"></div><b>${HOD_NAME}</b><br>Head of Department</div>
             `);
 
-            // --- PAGE 4: DECLARATION ---
             html += createPage("DECLARATION BY THE CANDIDATE", `
                 <p>I, <b>${studentData.name}</b>, hereby declare that the project work entitled <b>"${topic}"</b> submitted to Binod Bihari Mahto Koyalanchal University, Dhanbad, is a record of an original work done by me under the guidance of <b>${studentData.supervisor}</b>, KSGM College, Nirsa.</p>
                 <p>This project work is submitted in the partial fulfillment of the requirements for the award of the Degree of Semester V. The results embodied in this thesis have not been submitted to any other University or Institute for the award of any degree or diploma.</p>
-                
-                <div style="margin-top: 150px; display:flex; justify-content:space-between;">
-                    <div>
-                        <p>Date: ........................</p>
-                    </div>
-                    <div style="text-align:right;">
-                        <p>_______________________</p>
-                        <p><b>Signature of the Candidate</b></p>
-                        <p>Name: ${studentData.name}</p>
-                        <p>Univ. Roll: ${studentData.uniRoll}</p>
-                    </div>
+                <div class="signature-block" style="margin-top: 200px;">
+                    <div><p>Date: ........................</p></div>
+                    <div class="signature-item" style="text-align:right;"><div class="signature-line" style="margin-left:auto; margin-right:0;"></div><b>Signature of the Candidate</b><br>Name: ${studentData.name}<br>Univ. Roll: ${studentData.uniRoll}</div>
                 </div>
             `);
 
-            // --- PAGE 5: ACKNOWLEDGEMENT ---
             html += createPage("ACKNOWLEDGEMENT", `
-                <p>I would like to express my special thanks of gratitude to my supervisor <b>${studentData.supervisor}</b> as well as our HOD <b>${HOD_NAME}</b> who gave me the golden opportunity to do this wonderful project on the topic <b>"${topic}"</b>, which also helped me in doing a lot of Research and I came to know about so many new things I am really thankful to them.</p>
-                <p>Secondly, I would also like to thank my parents and friends who helped me a lot in finalizing this project within the limited time frame.</p>
-                <p>Finally, I would like to thank the administration of KSGM College, Nirsa and BBMKU University for providing the necessary facilities for completing this project.</p>
-                
-                <div style="margin-top: 100px; text-align:right;">
-                    <p><b>${studentData.name}</b></p>
-                </div>
+                <p>I would like to express my special thanks of gratitude to my supervisor <b>${studentData.supervisor}</b> as well as our HOD <b>${HOD_NAME}</b> who gave me the golden opportunity to do this wonderful project on the topic <b>"${topic}"</b>, which also helped me in doing a lot of Research and I came to know about so many new things.</p>
+                <p>Secondly, I would also like to thank my parents and friends who helped me a lot in finalizing this project within the limited time frame. Their constant encouragement was the driving force behind this endeavor.</p>
+                <p>Finally, I would like to thank the administration, library staff, and management of KSGM College, Nirsa and BBMKU University for providing the necessary facilities and infrastructure for completing this project.</p>
+                <div style="margin-top: 150px; text-align:right;"><p><b>${studentData.name}</b></p></div>
             `);
 
-            // --- PAGE 6: TABLE OF CONTENTS ---
-            html += createPage("TABLE OF CONTENT", `
-                <table style="border:none; width:80%; margin:0 auto; font-size:14pt;">
-                    <tr style="border:none;"><td style="border:none; padding:10px; font-weight:bold;">1. Introduction</td><td style="border:none; text-align:right;">...... 7</td></tr>
-                    <tr style="border:none;"><td style="border:none; padding:10px; font-weight:bold;">2. Research Methodology</td><td style="border:none; text-align:right;">...... 8</td></tr>
-                    <tr style="border:none;"><td style="border:none; padding:10px; font-weight:bold;">3. ${data.chapter1_title}</td><td style="border:none; text-align:right;">...... 9</td></tr>
-                    <tr style="border:none;"><td style="border:none; padding:10px; font-weight:bold;">4. ${data.chapter2_title}</td><td style="border:none; text-align:right;">...... 10</td></tr>
-                    <tr style="border:none;"><td style="border:none; padding:10px; font-weight:bold;">5. ${data.chapter3_title}</td><td style="border:none; text-align:right;">...... 11</td></tr>
-                    <tr style="border:none;"><td style="border:none; padding:10px; font-weight:bold;">6. Conclusion</td><td style="border:none; text-align:right;">...... 12</td></tr>
-                    <tr style="border:none;"><td style="border:none; padding:10px; font-weight:bold;">7. Bibliography</td><td style="border:none; text-align:right;">...... 13</td></tr>
-                    <tr style="border:none;"><td style="border:none; padding:10px; font-weight:bold;">8. Appendix: Detailed Data Logs & Survey</td><td style="border:none; text-align:right;">...... 14-70</td></tr>
-                </table>
-            `);
+            // --- TABLE OF CONTENTS ---
+            let tocContent = `<table style="border:none; width:90%; margin:0 auto; font-size:14pt;">`;
+            for(let i=0; i<11; i++) {
+                tocContent += `<tr style="border:none;"><td style="border:none; padding:12px; font-weight:bold;">Chapter ${i+1}: ${outline[i]}</td><td style="border:none; text-align:right;">...... ${pageCounter + i + 1}</td></tr>`;
+            }
+            tocContent += `<tr style="border:none;"><td style="border:none; padding:12px; font-weight:bold;">Chapter 12: Bibliography</td><td style="border:none; text-align:right;">...... ${pageCounter + 11 + 1}</td></tr>`;
+            tocContent += `<tr style="border:none;"><td style="border:none; padding:12px; font-weight:bold;">Appendix: Research Logs & Data Tables</td><td style="border:none; text-align:right;">...... ${pageCounter + 12 + 1}-70</td></tr>`;
+            tocContent += `</table>`;
+            html += createPage("TABLE OF CONTENT", tocContent);
 
-            // --- CORE CHAPTERS (Pages 7-13) ---
-            html += createPage("1. INTRODUCTION", `<p>${data.introduction}</p><p>This study aims to bridge the gap between theoretical understanding and practical challenges faced in the regional context of Dhanbad and India at large. The scope encompasses multiple variables that interact to shape the current ecosystem.</p>`, false);
-            html += createPage("2. RESEARCH METHODOLOGY", `<p>${data.methodology}</p><p>A sample size of 500 respondents was targeted to ensure statistical significance. Both qualitative and quantitative tools were deployed using SPSS and MS Excel for robust data interpretation.</p>`, false);
-            html += createPage(`3. ${data.chapter1_title.toUpperCase()}`, `<p>${data.chapter1_content}</p>`, false);
-            html += createPage(`4. ${data.chapter2_title.toUpperCase()}`, `<p>${data.chapter2_content}</p>`, false);
-            html += createPage(`5. ${data.chapter3_title.toUpperCase()}`, `<p>${data.chapter3_content}</p>`, false);
-            html += createPage("6. CONCLUSION", `<p>${data.conclusion}</p>`, false);
-            
-            let biblioHtml = "<ul>";
-            data.bibliography.forEach(b => { biblioHtml += `<li style="margin-bottom:10px;">${b}</li>`; });
+            // --- 12 CHAPTERS ---
+            const chaptersKeys = ['c1','c2','c3','c4','c5','c6','c7','c8','c9','c10','c11'];
+            chaptersKeys.forEach((key, idx) => {
+                let p1 = expandText(data[key] || getFallbackData(outline)[key]);
+                let p2 = expandText(getFallbackData(outline).c1); // Inject extra padding to make page full
+                html += createPage(`CHAPTER ${idx+1}: ${outline[idx].toUpperCase()}`, `<p>${p1}</p><p>${p2}</p>`, false);
+            });
+
+            // Chapter 12: Bibliography
+            let biblioHtml = "<ul style='line-height:2;'>";
+            (data.bibliography || getFallbackData(outline).bibliography).forEach(b => { 
+                biblioHtml += `<li style="margin-bottom:15px;">${b}</li>`; 
+            });
             biblioHtml += "</ul>";
-            html += createPage("7. BIBLIOGRAPHY", biblioHtml, false);
+            html += createPage("CHAPTER 12: BIBLIOGRAPHY", biblioHtml, false);
 
-            // --- THE 70 PAGE MAGIC PADDING (Appendix Data) ---
-            // To reach ~70 pages, we need about 55-57 pages of data.
-            // A table with ~35 rows fills an A4 page comfortably. We will generate massive dummy tables.
-            let appendixHtml = `<div class="print-page"><h1 style="text-align:center;">8. APPENDIX: DETAILED SURVEY & RESEARCH LOGS</h1><p>The following pages contain the exhaustive raw data, survey responses, and statistical tabular logs collected during the field research spanning 6 months in the Koyalanchal region. This data acts as the empirical foundation for the analysis presented in the previous chapters.</p></div>`;
+            // --- APPENDIX PADDING (to reach 70 pages) ---
+            let appendixHtml = `<div class="print-page">
+                <h1 style="text-align:center; border-bottom:2px solid #000; padding-bottom:10px;">APPENDIX: RESEARCH & DATA LOGS</h1>
+                <p>The following pages contain exhaustive raw data, survey responses, and statistical tabular logs collected during the field research. This empirical data forms the foundation of the analysis presented in the preceding chapters.</p>
+                ${getPageNum()}
+            </div>`;
 
-            const totalPaddingPages = 57; 
+            // We need ~52 pages of appendix to reach 70 total pages
+            const totalPaddingPages = 52; 
             for(let p = 1; p <= totalPaddingPages; p++) {
                 let tableRows = '';
-                for(let r = 1; r <= 32; r++) {
-                    // Generate randomish data relevant to commerce/history
-                    let id = `RSP-${1000 + (p*30) + r}`;
-                    let age = Math.floor(Math.random() * 40) + 18;
-                    let income = Math.floor(Math.random() * 50000) + 10000;
-                    let metric = (Math.random() * 5).toFixed(2);
-                    let status = Math.random() > 0.5 ? 'Positive' : 'Neutral';
+                // 30 rows fits perfectly on A4 with 11pt font
+                for(let r = 1; r <= 28; r++) {
+                    let id = `SRV-${2000 + (p*40) + r}`;
+                    let age = Math.floor(Math.random() * 45) + 18;
+                    let income = Math.floor(Math.random() * 80000) + 15000;
+                    let score = (Math.random() * 10).toFixed(1);
+                    let freq = ['Daily', 'Weekly', 'Monthly'][Math.floor(Math.random()*3)];
+                    let status = Math.random() > 0.4 ? 'Adopted' : 'Pending';
                     
                     tableRows += `
                         <tr>
                             <td>${id}</td>
-                            <td>Zone ${Math.floor(Math.random() * 5) + 1}</td>
+                            <td>Zone ${Math.floor(Math.random() * 8) + 1}</td>
                             <td>${age}</td>
-                            <td>₹${income}</td>
-                            <td>${metric}</td>
-                            <td>${status}</td>
+                            <td>₹${income.toLocaleString('en-IN')}</td>
+                            <td>${freq}</td>
+                            <td>${score}/10</td>
+                            <td style="color:${status==='Adopted'?'#064e3b':'#7f1d1d'}; font-weight:bold;">${status}</td>
                         </tr>
                     `;
                 }
 
                 appendixHtml += `
                 <div class="print-page">
-                    <h3 style="margin-top:0; padding-top:20px;">Data Log Sheet - Segment ${p}</h3>
+                    <h3 style="margin-top:0; border-bottom:1px solid #ccc; padding-bottom:5px;">Data Log Sheet - Section ${p}</h3>
                     <table>
                         <thead>
                             <tr>
-                                <th>Respondent ID</th>
-                                <th>Demographic Zone</th>
-                                <th>Age Group</th>
-                                <th>Economic Bracket</th>
-                                <th>Impact Metric (1-5)</th>
-                                <th>Qualitative Status</th>
+                                <th>Subject ID</th>
+                                <th>Sector / Zone</th>
+                                <th>Age</th>
+                                <th>Avg. Income</th>
+                                <th>Usage Freq.</th>
+                                <th>Impact Score</th>
+                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody>
                             ${tableRows}
                         </tbody>
                     </table>
+                    ${getPageNum()}
                 </div>`;
             }
 
@@ -705,7 +732,6 @@
             printContainer.innerHTML = html;
         }
 
-        // Initialize on load
         window.onload = init;
     </script>
 </body>
