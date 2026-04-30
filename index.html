@@ -231,18 +231,20 @@
                     </form>
                 </div>
 
-                <!-- Step 2: Topic -->
+                <!-- Step 2: Topic (Fixed to Topic 1) -->
                 <div id="step-2" class="wizard-step">
-                    <h2 class="text-2xl font-bold mb-2 text-center text-blue-800">Step 2: Choose Your Topic</h2>
-                    <p class="text-center text-gray-600 mb-6 border-b pb-3">Select one topic to generate a detailed 12-Chapter Project.</p>
+                    <h2 class="text-2xl font-bold mb-2 text-center text-blue-800">Step 2: Project Topic</h2>
+                    <p class="text-center text-gray-600 mb-6 border-b pb-3">Your project topic is locked for the predefined 12-chapter content.</p>
                     
-                    <div class="space-y-4" id="topicList">
-                        <!-- Topics generated via JS -->
+                    <div class="p-5 border-2 border-blue-400 bg-blue-50 rounded-lg text-center shadow-inner">
+                        <i class="fas fa-book text-3xl text-blue-500 mb-3"></i>
+                        <h3 class="text-lg font-bold text-gray-800">Impact of Digital Payments on Small Businesses</h3>
+                        <p class="text-sm text-gray-600 mt-2">A study on how UPI, Paytm, and digital wallets affect small traders in Dhanbad.</p>
                     </div>
                     
                     <div class="mt-8 flex justify-between">
                         <button type="button" onclick="prevStep(1)" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded shadow"><i class="fas fa-arrow-left mr-2"></i> Back</button>
-                        <button type="button" onclick="validateTopicAndNext()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded shadow">Next Step <i class="fas fa-arrow-right ml-2"></i></button>
+                        <button type="button" onclick="nextStep(3)" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded shadow">Next Step <i class="fas fa-arrow-right ml-2"></i></button>
                     </div>
                 </div>
 
@@ -263,19 +265,18 @@
                 <!-- Step 4: Loading -->
                 <div id="step-4" class="wizard-step text-center py-10">
                     <div class="loader mb-6"></div>
-                    <h2 class="text-2xl font-bold text-blue-800 mb-2" id="loadingText">Generating your Project...</h2>
-                    <p class="text-gray-600 mb-4">Please wait. Building 12 comprehensive chapters and compiling data logs.</p>
+                    <h2 class="text-2xl font-bold text-blue-800 mb-2" id="loadingText">Compiling your Project...</h2>
+                    <p class="text-gray-600 mb-4">Injecting your 12 chapters and formatting ~70 pages...</p>
                     <div class="w-full bg-gray-200 rounded-full h-2.5 mb-4">
                         <div class="bg-blue-600 h-2.5 rounded-full" id="progressBar" style="width: 0%"></div>
                     </div>
-                    <p class="text-sm text-gray-500" id="progressStatus">Structuring chapters...</p>
                 </div>
 
                 <!-- Step 5: Success -->
                 <div id="step-5" class="wizard-step text-center py-10">
                     <i class="fas fa-check-circle text-6xl text-green-500 mb-4"></i>
                     <h2 class="text-3xl font-bold text-gray-800 mb-4">Project Ready!</h2>
-                    <p class="text-gray-600 mb-8">Your ~70 page A4 project with 12 chapters is perfectly formatted.</p>
+                    <p class="text-gray-600 mb-8">Your ~70 page A4 project with your custom 12 chapters is perfectly formatted.</p>
                     
                     <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mb-8 text-left text-sm text-blue-700">
                         <strong>Important Print Instructions:</strong><br>
@@ -313,21 +314,16 @@
     <script>
         // Constants & Data
         const HOD_NAME = "Prof. Birendra Bihari Verma";
+        const ONLY_TOPIC = "Impact of Digital Payments on Small Businesses – A study on how UPI, Paytm, and digital wallets affect small traders in Dhanbad.";
         
-        const topics = [
-            "Impact of Digital Payments on Small Businesses – A study on how UPI, Paytm, and digital wallets affect small traders in Dhanbad.",
-            "Analysis of Non-Performing Assets (NPAs) in Indian Banks – Trends, causes, and recovery strategies with a focus on public sector banks.",
-            "Evaluating the effectiveness of Corporate Social Responsibility initiatives in education or healthcare.",
-            "Role of Start Ups in developing Indian Economy."
+        const outline = [
+            "Introduction", "Literature Review", "Digital Payment System in India", 
+            "Profile of Dhanbad", "Impact on Small Businesses", "Case Studies", 
+            "Comparison of Payment Methods", "Challenges", "Future Trends", 
+            "Findings and Suggestions", "Conclusion"
         ];
 
-        // Outline structures mapped to topics
-        const topicOutlines = [
-            ["Introduction", "Literature Review", "Digital Payment System in India", "Profile of Dhanbad", "Impact on Small Businesses", "Case Studies", "Comparison of Payment Methods", "Challenges", "Future Trends", "Findings and Suggestions", "Conclusion"],
-            ["Introduction", "Literature Review", "Banking Sector in India", "Concept of NPAs", "Impact on Public Sector Banks", "Case Studies of Banks", "Recovery Strategies (SARFAESI, IBC)", "Challenges in Recovery", "Future Trends", "Findings and Suggestions", "Conclusion"],
-            ["Introduction", "Literature Review", "CSR Laws in India", "Profile of Selected Sector (Education/Healthcare)", "Impact of CSR Initiatives", "Case Studies (Tata, Reliance)", "Comparison of Initiatives", "Challenges in Implementation", "Future of CSR", "Findings and Suggestions", "Conclusion"],
-            ["Introduction", "Literature Review", "Startup Ecosystem in India", "Profile of Unicorns", "Impact on Economy (Jobs, GDP)", "Case Studies of Successful Startups", "Traditional Business vs Startups", "Challenges Faced by Startups", "Future Trends", "Findings and Suggestions", "Conclusion"]
-        ];
+        let projectContent = {}; // Data ab ksgmproject.txt se aayega
 
         const themes = [
             { id: 1, name: "Classic Blue", class: "theme-1" },
@@ -338,27 +334,11 @@
             { id: 6, name: "Purple Professional", class: "theme-6" }
         ];
 
-        let selectedTopicIndex = null;
         let selectedThemeId = 1;
         let studentData = {};
         let pageCounter = 1;
 
-        const apiKey = ""; 
-        const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`;
-
         function init() {
-            const topicContainer = document.getElementById('topicList');
-            topics.forEach((topic, index) => {
-                const div = document.createElement('div');
-                div.className = 'p-4 border rounded cursor-pointer hover:bg-blue-50 transition duration-150 flex items-start gap-3';
-                div.onclick = () => selectTopic(index, div);
-                div.innerHTML = `
-                    <div class="mt-1"><input type="radio" name="topic" value="${index}" class="w-4 h-4 text-blue-600"></div>
-                    <div class="text-gray-800 font-medium">${index + 1}. ${topic}</div>
-                `;
-                topicContainer.appendChild(div);
-            });
-
             const themeContainer = document.getElementById('themeList');
             themes.forEach((theme) => {
                 const div = document.createElement('div');
@@ -400,143 +380,78 @@
             document.getElementById(`step-${step}`).classList.add('active');
         }
 
-        function selectTopic(index, element) {
-            selectedTopicIndex = index;
-            document.querySelectorAll('input[name="topic"]').forEach(radio => radio.checked = false);
-            element.querySelector('input').checked = true;
-            document.querySelectorAll('#topicList > div').forEach(el => el.classList.remove('bg-blue-100', 'border-blue-400'));
-            element.classList.add('bg-blue-100', 'border-blue-400');
-        }
-
-        function validateTopicAndNext() {
-            if(selectedTopicIndex === null) {
-                alert("Please select a topic first.");
-                return;
-            }
-            nextStep(3);
-        }
-
         function selectTheme(id, element) {
             selectedThemeId = id;
             document.querySelectorAll('.theme-card').forEach(el => el.classList.remove('selected'));
             element.classList.add('selected');
         }
 
-        function updateProgress(percent, text) {
-            document.getElementById('progressBar').style.width = `${percent}%`;
-            document.getElementById('progressStatus').innerText = text;
-        }
-
-        // Add padding text to make chapters longer
-        function expandText(text) {
-            const fillers = [
-                " This aspect is crucial for comprehensively understanding the broader implications of the study. Various scholars have noted similar trends in historical data, suggesting a cyclical nature to these developments.",
-                " Furthermore, the integration of these methodologies provides a robust framework for analysis. It is imperative to consider the socio-economic variables that influence these outcomes directly.",
-                " In recent years, empirical evidence has increasingly supported these assertions, bridging the gap between theoretical models and practical applications in the real world.",
-                " This observation aligns with contemporary literature, which emphasizes the need for continuous evaluation and adaptation of strategies in response to dynamic environmental factors.",
-                " Consequently, stakeholders must prioritize these findings when formulating future policies. The data strongly indicates a paradigm shift that cannot be ignored by academic researchers or practitioners.",
-                " To elaborate further, a granular look at the statistics reveals underlying patterns that traditional models often overlook. This necessitates a more nuanced approach to the subject matter."
-            ];
-            // If text is short, append some filler
-            let expanded = text;
-            if (text.length < 800) {
-                expanded += fillers[Math.floor(Math.random() * fillers.length)];
-                expanded += fillers[Math.floor(Math.random() * fillers.length)];
-                expanded += fillers[Math.floor(Math.random() * fillers.length)];
+        // TXT file se data fetch aur parse karne ka function
+        async function loadProjectData() {
+            try {
+                const response = await fetch('ksgmproject.txt');
+                if (!response.ok) throw new Error("ksgmproject.txt nahi mila");
+                const text = await response.text();
+                
+                // Chapter 1 se 11 tak data nikalna
+                for(let i=1; i<=11; i++) {
+                    const startMarker = `[CHAPTER ${i}]`;
+                    const endMarker = i === 11 ? `[BIBLIOGRAPHY]` : `[CHAPTER ${i+1}]`;
+                    const startIndex = text.indexOf(startMarker);
+                    const endIndex = text.indexOf(endMarker);
+                    
+                    if(startIndex !== -1) {
+                        const contentStart = startIndex + startMarker.length;
+                        let chapterText = endIndex !== -1 ? text.substring(contentStart, endIndex) : text.substring(contentStart);
+                        projectContent[`c${i}`] = chapterText.trim();
+                    } else {
+                        projectContent[`c${i}`] = "Chapter " + i + " ka data ksgmproject.txt me nahi mila. Kripya format check karein.";
+                    }
+                }
+                
+                // Bibliography ka data nikalna
+                const bibIndex = text.indexOf("[BIBLIOGRAPHY]");
+                if(bibIndex !== -1) {
+                    const bibText = text.substring(bibIndex + "[BIBLIOGRAPHY]".length).trim();
+                    projectContent.bibliography = bibText.split('\n').filter(b => b.trim() !== '');
+                } else {
+                    projectContent.bibliography = ["No bibliography found in ksgmproject.txt"];
+                }
+                return true;
+            } catch (error) {
+                alert("Error: 'ksgmproject.txt' file load nahi ho payi. Kya aapne use GitHub pe sahi naam se upload kiya hai?");
+                console.error(error);
+                return false;
             }
-            return expanded;
         }
 
         async function startGeneration() {
             nextStep(4);
             pageCounter = 1;
+            document.getElementById('progressBar').style.width = `20%`;
             
-            const selectedTopicText = topics[selectedTopicIndex];
-            const outline = topicOutlines[selectedTopicIndex];
-            let reportData = null;
-
-            try {
-                updateProgress(30, "Calling AI to structure 12 deep chapters...");
-                reportData = await fetchReportFromGemini(selectedTopicText, outline);
-                updateProgress(60, "Formatting Pages and Applying Styles...");
-                await buildPrintDocument(reportData, selectedTopicText, outline);
-                
-                updateProgress(100, "Finalizing Document...");
-                setTimeout(() => nextStep(5), 1000);
-
-            } catch (error) {
-                console.error("AI Generation failed, using offline extensive fallback:", error);
-                updateProgress(50, "Using offline extended knowledge base...");
-                reportData = getFallbackData(outline);
-                await buildPrintDocument(reportData, selectedTopicText, outline);
-                nextStep(5);
+            // Generate dabate hi text file fetch karo
+            const success = await loadProjectData();
+            if(!success) {
+                document.getElementById('loadingText').innerText = "File Loading Failed! Kripya alert message dekhein.";
+                return;
             }
-        }
 
-        async function fetchReportFromGemini(topic, outline) {
-            const prompt = `
-            You are an expert academic writer. Create a detailed project report for a University student on the topic: "${topic}".
-            Based strictly on this chapter outline: ${JSON.stringify(outline)}.
+            document.getElementById('progressBar').style.width = `80%`;
             
-            Return ONLY a valid JSON object. Do not use markdown wrappers.
-            {
-                "c1": "Write 300 words for ${outline[0]}.",
-                "c2": "Write 300 words for ${outline[1]}.",
-                "c3": "Write 300 words for ${outline[2]}.",
-                "c4": "Write 300 words for ${outline[3]}.",
-                "c5": "Write 300 words for ${outline[4]}.",
-                "c6": "Write 300 words for ${outline[5]}.",
-                "c7": "Write 300 words for ${outline[6]}.",
-                "c8": "Write 300 words for ${outline[7]}.",
-                "c9": "Write 300 words for ${outline[8]}.",
-                "c10": "Write 300 words for ${outline[9]}.",
-                "c11": "Write 300 words for ${outline[10]}.",
-                "bibliography": ["Book 1", "Journal 2", "Website 3", "Report 4"]
-            }`;
-
-            const payload = {
-                contents: [{ parts: [{ text: prompt }] }],
-                generationConfig: { responseMimeType: "application/json" }
-            };
-
-            const response = await fetch(GEMINI_API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            });
-
-            if (!response.ok) throw new Error("API Error");
-            const data = await response.json();
-            return JSON.parse(data.candidates[0].content.parts[0].text);
+            setTimeout(() => {
+                document.getElementById('progressBar').style.width = `100%`;
+                buildPrintDocument();
+                setTimeout(() => nextStep(5), 600);
+            }, 1000);
         }
 
-        function getFallbackData(outline) {
-            // Very long fallback text to ensure it looks like a real project
-            const baseText = "This research provides an in-depth analysis of the current landscape. Over the past decade, sweeping changes have disrupted traditional models. Through rigorous empirical observation, we have identified key variables that dictate success and failure. Historically, institutions relied on outdated metrics, but the advent of new paradigms requires a paradigm shift. Data collected from various zones indicates a strong positive correlation between adoption of new methods and overall efficiency. However, challenges such as lack of infrastructure, regulatory hurdles, and awareness gaps persist. It is imperative for stakeholders to address these bottlenecks proactively. Future trends suggest a move towards automated, highly integrated systems that reduce friction. Recommendations include targeted policy interventions, skill development programs, and enhanced public-private partnerships. Ultimately, the synthesis of these strategies will pave the way for sustainable growth and resilience in the face of global economic uncertainties. Furthermore, a comparative analysis reveals that early adopters have significantly outperformed their peers in key performance indicators.";
-            
-            return {
-                c1: `Introduction: ${baseText} ${baseText}`,
-                c2: `Literature Review: Scholars like Smith (2018) and Kumar (2021) have extensively documented these phenomena. ${baseText}`,
-                c3: `${outline[2]}: An overview of the national scenario reveals interesting patterns. ${baseText}`,
-                c4: `${outline[3]}: Focusing on the regional demographic, the data highlights specific local challenges. ${baseText}`,
-                c5: `${outline[4]}: The direct impact on the target group is multifaceted. ${baseText}`,
-                c6: `Case Studies: Case Study A demonstrates rapid scaling, while Case Study B highlights failure to adapt. ${baseText}`,
-                c7: `${outline[6]}: A comparative lens provides clarity on which models work best. ${baseText}`,
-                c8: `Challenges: The primary roadblocks include infrastructural deficits and behavioral resistance. ${baseText}`,
-                c9: `Future Trends: Predictive models point towards a highly digitized and interconnected future. ${baseText}`,
-                c10: `Findings and Suggestions: Based on the data, we propose a five-point action plan. ${baseText}`,
-                c11: `Conclusion: In summation, the evidence strongly supports a need for proactive adaptation. ${baseText}`,
-                bibliography: [
-                    "Kothari, C.R. (2004). Research Methodology: Methods and Techniques.",
-                    "Reserve Bank of India (RBI) Annual Publications.",
-                    "Ministry of Finance Reports (2023).",
-                    "Sharma, A. (2021). Economic Trends in Modern India.",
-                    "Journal of Commerce and Business Studies, Vol 14."
-                ]
-            };
+        function formatContent(text) {
+            // Replaces double newlines with <br><br> to preserve your paragraph breaks
+            return text.replace(/\n\n/g, '</p><p>').replace(/\n/g, '<br>');
         }
 
-        async function buildPrintDocument(data, topic, outline) {
+        function buildPrintDocument() {
             const printContainer = document.getElementById('print-container');
             printContainer.innerHTML = ''; 
             const themeClass = `theme-${selectedThemeId}`;
@@ -550,7 +465,7 @@
                     <div class="front-page-inner">
                         <div style="width:100%; text-align:center;">
                             <h2 style="margin-top:0; letter-spacing:2px;">PROJECT REPORT</h2>
-                            <h3 class="highlight-text" style="font-size:18pt; margin-top:5px; font-style:italic;">"${topic.split('–')[0].trim()}"</h3>
+                            <h3 class="highlight-text" style="font-size:18pt; margin-top:5px; font-style:italic;">"${ONLY_TOPIC.split('–')[0].trim()}"</h3>
                             
                             <h1 style="font-size:24pt; margin-top:25px; line-height:1.2;">BINOD BIHARI MAHTO KOYALANCHAL UNIVERSITY, DHANBAD</h1>
                             <p style="font-style:italic; font-size:12pt; margin:5px 0;">(A State University of Government of Jharkhand)</p>
@@ -610,7 +525,7 @@
 
             // --- CERTIFICATES ---
             html += createPage("ACCEPTANCE CERTIFICATE", `
-                <p>This is to certify that the project report entitled <b>"${topic}"</b> submitted by <b>${studentData.name}</b> (University Roll No: <b>${studentData.uniRoll}</b>, Registration No: <b>${studentData.regNo}</b>) towards partial fulfillment of the requirements for the award of Semester V Major Degree at Binod Bihari Mahto Koyalanchal University, Dhanbad, is accepted.</p>
+                <p>This is to certify that the project report entitled <b>"${ONLY_TOPIC}"</b> submitted by <b>${studentData.name}</b> (University Roll No: <b>${studentData.uniRoll}</b>, Registration No: <b>${studentData.regNo}</b>) towards partial fulfillment of the requirements for the award of Semester V Major Degree at Binod Bihari Mahto Koyalanchal University, Dhanbad, is accepted.</p>
                 <p>The evaluation committee has examined the project and is satisfied with the effort, methodology, and research conducted by the candidate.</p>
                 <div class="signature-block" style="margin-top: 200px;">
                     <div class="signature-item"><div class="signature-line"></div><b>Internal Examiner</b></div>
@@ -619,7 +534,7 @@
             `);
 
             html += createPage("CERTIFICATE FROM THE SUPERVISOR", `
-                <p>This is to certify that the project work entitled <b>"${topic}"</b> is a bonafide work carried out by <b>${studentData.name}</b>, a student of Semester V at KSGM College, Nirsa, under my supervision and guidance.</p>
+                <p>This is to certify that the project work entitled <b>"${ONLY_TOPIC}"</b> is a bonafide work carried out by <b>${studentData.name}</b>, a student of Semester V at KSGM College, Nirsa, under my supervision and guidance.</p>
                 <p>To the best of my knowledge, the matter embodied in this project has not been submitted to any other University or Institute for the award of any Degree or Diploma. The candidate has strictly adhered to the academic guidelines and ethical research practices.</p>
                 <div class="signature-block" style="margin-top: 150px;">
                     <div><p>Date: ........................</p><p>Place: Nirsa, Dhanbad</p></div>
@@ -629,7 +544,7 @@
             `);
 
             html += createPage("DECLARATION BY THE CANDIDATE", `
-                <p>I, <b>${studentData.name}</b>, hereby declare that the project work entitled <b>"${topic}"</b> submitted to Binod Bihari Mahto Koyalanchal University, Dhanbad, is a record of an original work done by me under the guidance of <b>${studentData.supervisor}</b>, KSGM College, Nirsa.</p>
+                <p>I, <b>${studentData.name}</b>, hereby declare that the project work entitled <b>"${ONLY_TOPIC}"</b> submitted to Binod Bihari Mahto Koyalanchal University, Dhanbad, is a record of an original work done by me under the guidance of <b>${studentData.supervisor}</b>, KSGM College, Nirsa.</p>
                 <p>This project work is submitted in the partial fulfillment of the requirements for the award of the Degree of Semester V. The results embodied in this thesis have not been submitted to any other University or Institute for the award of any degree or diploma.</p>
                 <div class="signature-block" style="margin-top: 200px;">
                     <div><p>Date: ........................</p></div>
@@ -638,7 +553,7 @@
             `);
 
             html += createPage("ACKNOWLEDGEMENT", `
-                <p>I would like to express my special thanks of gratitude to my supervisor <b>${studentData.supervisor}</b> as well as our HOD <b>${HOD_NAME}</b> who gave me the golden opportunity to do this wonderful project on the topic <b>"${topic}"</b>, which also helped me in doing a lot of Research and I came to know about so many new things.</p>
+                <p>I would like to express my special thanks of gratitude to my supervisor <b>${studentData.supervisor}</b> as well as our HOD <b>${HOD_NAME}</b> who gave me the golden opportunity to do this wonderful project on the topic <b>"${ONLY_TOPIC}"</b>, which also helped me in doing a lot of Research and I came to know about so many new things.</p>
                 <p>Secondly, I would also like to thank my parents and friends who helped me a lot in finalizing this project within the limited time frame. Their constant encouragement was the driving force behind this endeavor.</p>
                 <p>Finally, I would like to thank the administration, library staff, and management of KSGM College, Nirsa and BBMKU University for providing the necessary facilities and infrastructure for completing this project.</p>
                 <div style="margin-top: 150px; text-align:right;"><p><b>${studentData.name}</b></p></div>
@@ -654,17 +569,16 @@
             tocContent += `</table>`;
             html += createPage("TABLE OF CONTENT", tocContent);
 
-            // --- 12 CHAPTERS ---
+            // --- 12 CHAPTERS (Pasted from variable) ---
             const chaptersKeys = ['c1','c2','c3','c4','c5','c6','c7','c8','c9','c10','c11'];
             chaptersKeys.forEach((key, idx) => {
-                let p1 = expandText(data[key] || getFallbackData(outline)[key]);
-                let p2 = expandText(getFallbackData(outline).c1); // Inject extra padding to make page full
-                html += createPage(`CHAPTER ${idx+1}: ${outline[idx].toUpperCase()}`, `<p>${p1}</p><p>${p2}</p>`, false);
+                let formattedText = formatContent(projectContent[key]);
+                html += createPage(`CHAPTER ${idx+1}: ${outline[idx].toUpperCase()}`, `<p>${formattedText}</p>`, false);
             });
 
             // Chapter 12: Bibliography
             let biblioHtml = "<ul style='line-height:2;'>";
-            (data.bibliography || getFallbackData(outline).bibliography).forEach(b => { 
+            projectContent.bibliography.forEach(b => { 
                 biblioHtml += `<li style="margin-bottom:15px;">${b}</li>`; 
             });
             biblioHtml += "</ul>";
